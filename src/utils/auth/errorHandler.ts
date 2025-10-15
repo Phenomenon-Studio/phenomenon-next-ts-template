@@ -1,5 +1,6 @@
 import type { Mutation, Query } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { refreshToken } from '@/api/auth';
 import {
     getRefreshToken,
     removeAccessToken,
@@ -7,7 +8,6 @@ import {
     setAccessToken,
     setRefreshToken,
 } from '@/utils/auth/tokens';
-import { refreshToken } from '@/api/auth';
 
 let isRedirecting = false;
 let isRefreshing = false;

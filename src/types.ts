@@ -1,6 +1,6 @@
 export type ObjValues<T> = T[keyof T];
 
-export type WithClassName<T> = T & {
+export type WithClassName<T = unknown> = T & {
     /**
         Extendable classnames of component
     */

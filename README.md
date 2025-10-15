@@ -29,6 +29,7 @@ Table of contents:
       - [Anatomy](#anatomy)
     - [Modules](#modules)
       - [Submodules](#submodules)
+  - [✳️ Icons Usage](#️-icons-usage)
 ---
 
 ## 📦 Stack
@@ -485,3 +486,29 @@ Submodules may have everything regular modules can have and do, but they can be 
   - but it is already not allowed to be used as sub-route
 - as sub-route:
   - `src/modules/About/components/Settings` -> `http://localhost:3000/about/settings`
+
+
+## ✳️ Icons Usage
+
+1. Collect all icons as separate files with `.svg` extension and kebab-case naming. BUT the size of the icon should be added to the end of file name, starting with `_` underscore
+
+Example:
+```md
+src
+├── icons
+│   ├── arrow-left_16.svg
+│   ├── search_20.svg
+│   └── arrow-right-circle_24.svg
+```
+
+2. Update all dynamic color elements of each icon to be filled/stroked with `currentColor` value. it will inherit the CSS `color` rule applied to the icon ot its parent
+3. Import the icon as regular JSX component:
+   ```tsx
+   import CloseCircleFill16Icon from '@/icons/close-circle-fill_16.svg';
+
+   // ...
+   return (
+    // ...
+    <CloseCircleFill16Icon className={s.icon} />
+   );
+   ```

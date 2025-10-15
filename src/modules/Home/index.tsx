@@ -2,8 +2,8 @@
 
 import { memo } from 'react';
 import clsx from 'clsx';
-import { CURRENT_YEAR } from './constants';
 import PhenomenonMarkIcon from '@/ui/icons/PhenomenonMarkIcon';
+import { CURRENT_YEAR } from './constants';
 import Counter from './components/Counter';
 import s from './styles.module.css';
 
