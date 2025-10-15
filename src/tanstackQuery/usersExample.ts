@@ -1,6 +1,6 @@
-import { queryOptions, useMutation } from '@tanstack/react-query';
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { queryOptions, useMutation } from '@tanstack/react-query';
 import { createUser, getUsers } from '@/api/usersExample';
 
 export const usersQueryKeys = {
@@ -34,6 +34,8 @@ export const getUsersQueryOptions = (searchParams: Record<string, unknown> | URL
 export const useCreateUser = (options?: UseMutationOptions<string, AxiosError, string, unknown>) => {
     return useMutation({
         ...options,
-        mutationFn: createUser,
+        mutationFn(data) {
+            return createUser(data);
+        },
     });
 };

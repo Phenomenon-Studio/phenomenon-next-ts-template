@@ -1,5 +1,5 @@
-import localFont from 'next/font/local';
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import QueryClientProvider from '@/context/QueryClientContext';
 import '@/styles/index.css';
 
