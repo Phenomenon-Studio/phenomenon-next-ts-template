@@ -8,7 +8,7 @@
         "build": "next build",
         "build:analyze": "ANALYZE=true next build",
         "start": "next start -p 4173",
-        "lint:next": "next lint",
+        "lint:next": "eslint .",
         "lint:stylelint": "stylelint --cache -q \"**/*.css\"",
         "lint:prettier": "prettier --check \"**/*.{js,ts,tsx,jsx,json,html,css,cjs}\"",
         "lint": "run-s lint:*",
