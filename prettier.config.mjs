@@ -30,7 +30,7 @@ const config = {
         '^@/constants',
         '^@/regexes',
         '^@/schemas',
-        '^(@/api|@/queries|@/hooks|@/providers|@/context|@/utils)(/.*)$',
+        '^(@/api|@/queries|@services|@/hooks|@/providers|@/context|@/utils)(/.*)$',
         '^@/modules',
         '^@/components',
         '^@/ui',
