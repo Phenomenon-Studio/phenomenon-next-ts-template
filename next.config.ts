@@ -1,6 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+    reactCompiler: true,
+    compiler: {
+        removeConsole: process.env.NODE_ENV === 'production',
+    },
+    turbopack: {},
     webpack(config) {
         // Grab the existing rule that handles SVG imports
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,6 +33,30 @@ const nextConfig: NextConfig = {
         fileLoaderRule.exclude = /\.svg$/i;
 
         return config;
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+                pathname: '/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                pathname: '/**',
+            },
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                pathname: '/**',
+            },
+        ],
+    },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '10mb',
+        },
     },
 };
 

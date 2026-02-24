@@ -1,13 +1,5 @@
 import type { Mutation, Query } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import { refreshToken } from '@/api/auth';
-import {
-    getRefreshToken,
-    removeAccessToken,
-    removeRefreshToken,
-    setAccessToken,
-    setRefreshToken,
-} from '@/utils/auth/tokens';
+import { HTTPError } from 'ky';
 
 let isRedirecting = false;
 let isRefreshing = false;
@@ -35,7 +27,7 @@ const processFailedQueue = () => {
     failedQueue = [];
 };
 
-const refreshTokenAndRetry = async (
+const refreshTokenAndRetry = (
     query?: Query<unknown, unknown, unknown>,
     mutation?: Mutation<unknown, unknown, unknown, unknown>,
     variables?: unknown
@@ -45,20 +37,11 @@ const refreshTokenAndRetry = async (
             isRefreshing = true;
             failedQueue.push({ query, mutation, variables });
 
-            const responseData = await refreshToken({
-                refreshToken: getRefreshToken()!,
-            });
-
-            setAccessToken(responseData.accessToken);
-            setRefreshToken(responseData.refreshToken);
             processFailedQueue();
         } else {
             failedQueue.push({ query, mutation, variables });
         }
     } catch {
-        removeAccessToken();
-        removeRefreshToken();
-
         if (!isRedirecting) {
             isRedirecting = true;
             window.location.href = '/login';
@@ -72,9 +55,9 @@ const errorHandler = (
     mutation?: Mutation<unknown, unknown, unknown, unknown>,
     variables?: unknown
 ) => {
-    const { status } = (error as AxiosError).response!;
+    const response = error as HTTPError;
 
-    if (status === 401) {
+    if (response?.response?.status === 401) {
         if (mutation) {
             refreshTokenAndRetry(undefined, mutation, variables);
         } else {

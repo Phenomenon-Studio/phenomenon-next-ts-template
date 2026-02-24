@@ -1,4 +1,4 @@
-# Next 15 Project template
+# Next 16 Project template
 
 > by Phenomenon.Studio
 
@@ -6,20 +6,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 
 Table of contents:
-- [Next 15 Project template](#next-15-project-template)
+- [Next 16 Project template](#next-16-project-template)
   - [📦 Stack](#-stack)
   - [🚀 Quick start](#-quick-start)
   - [🤖 Commands](#-commands)
   - [🧶 Structure](#-structure)
-    - [API requests](#api-requests)
-      - [API queryClient options](#api-queryclient-options)
-    - [Contexts](#contexts)
-    - [Stores](#stores)
-    - [Hooks](#hooks)
-      - [API hooks](#api-hooks)
+    - [Core application structure](#core-application-structure)
+    - [Services \& API layer](#services--api-layer)
+    - [Application configuration \& utilities](#application-configuration--utilities)
+    - [Global application files](#global-application-files)
+      - [Build and output directories](#build-and-output-directories)
+      - [Configuration files](#configuration-files)
+      - [Linting and formatting configuration](#linting-and-formatting-configuration)
+      - [Git and development configuration](#git-and-development-configuration)
+      - [Editor and environment configurations](#editor-and-environment-configurations)
       - [Query hooks](#query-hooks)
         - [Query Keys](#query-keys)
       - [Mutation hooks](#mutation-hooks)
+    - [Contexts](#contexts)
+    - [Stores](#stores)
+    - [Hooks](#hooks)
     - [Utility functions](#utility-functions)
     - [Constants](#constants)
       - [Schemas](#schemas)
@@ -39,12 +45,11 @@ Table of contents:
 -   [Typescript](https://www.typescriptlang.org) - Static type checker
 -   [CLSX](https://github.com/lukeed/clsx) - classnames utility
 -   [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview) - Asynchronous state management
--   [Axios](https://axios-http.com/docs/intro) - HTTP client
+-   [Ky](https://github.com/sindresorhus/ky) - Modern HTTP client;
+-   [Nuqs](https://nuqs.dev/) - URL state management;
 -   [Zod](https://zod.dev/) - Schema validation
--   [React Hook Form](https://react-hook-form.com/) - Form management
--   [Eslint](https://eslint.org/) - Code linter
--   [Prettier](https://prettier.io/) - Code formatter
--   [Husky](https://typicode.github.io/husky/) - commands execution handler on git events
+-   [Tanstack Form](https://tanstack.com/form/latest) - Form management
+-   [ESLint](https://eslint.org), [Prettier](https://prettier.io), [StyleLint](https://stylelint.io), [Husky](https://typicode.github.io/husky) - Code quality and formatting;
 
 ## 🚀 Quick start
 
@@ -99,52 +104,250 @@ Table of contents:
 
 ## 🧶 Structure
 
-### API requests
+### Core application structure
 
-API requests are created globally in the root of the project to be used inside API hooks. API request are not directly called in project, only in hooks.
+-   `src/components` - contains shared components with business logic. These are reusable components that may include some business logic. Each component should consist of:
+    -   `index.tsx` - the component file itself;
+    -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
+    -   `types.ts` - types of component file (optional);
+    -   `hooks` - contains component hooks dir (optional). Should consist of:
+        -   `<hookName>.ts` - the hook file itself;
+    -   `constants.ts` - constants of component file (optional);
+    -   `utils` - utils dir of component file (optional). Should consist of:
+        -   `<utilName>.ts` - the util file itself;
+    -   `schemas.ts` - schemas of component file (optional);
+    -   `regexps.ts` - regexps of component file (optional);
+    -   `context` - the context dir of component file (optional). Should consist of:
+        -   `<ContextName>.tsx` - the context file itself;
+    -   `components` - the components dir of components (optional). Should consist of like `src/components`;
 
-API requests should be located inside `src/api` folder.
+-   `src/components/layouts` - contains layout components for different application layouts. Each layout component should:
+    -   have same structure as `src/components` has;
+    -   include `<Outlet />` as a child of component;
 
-API requests are performed with some library like `ky`, `axios` etc. Based on the library, `src/api` folder should contain the appropriate file `@ky.ts` or `@axios.ts`. This file should contain all instances for all origins.
+-   `src/components/ui` - contains basic UI components without business logic like button, input etc. Each component should consist of that files:
+    -   `index.tsx` - the component file itself;
+    -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
+    -   `types.ts` - types of component file (optional);
+    -   `hooks` - contains component hooks dir (optional). Should consist of:
+        -   `<hookName>.ts` - the hook file itself;
+    -   `constants.ts` - constants of component file (optional);
+    -   `schemas.ts` - schemas of component file (optional);
+    -   `regexps.ts` - regexps of component file (optional);
+    -   `utils` - utils dir of component file (optional). Should consist of:
+        -   `<utilName>.ts` - the util file itself;
+
+-   `src/modules` - contains independent features that have their own area of responsibility. These features can fetch data and have complete business logic. Each module should consist of:
+    -   `index.tsx` - the component file itself;
+    -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
+    -   `types.ts` - types of component file (optional);
+    -   `hooks` - contains component hooks dir (optional). Should consist of:
+        -   `<hookName>.ts` - the hook file itself;
+    -   `constants.ts` - constants of component file (optional);
+    -   `utils` - utils dir of component file (optional). Should consist of:
+        -   `<utilName>.ts` - the util file itself;
+    -   `schemas.ts` - schemas of component file (optional);
+    -   `regexps.ts` - regexps of component file (optional);
+    -   `context` - the context dir of component file (optional). Should consist of:
+        -   `<ContextName>.tsx` - the context file itself;
+    -   `components` - the components dir of components (optional). Should consist of like `src/components`;
+
+### Services & API layer  
+
+-   `src/services` - contains service layer for API calls and external integrations:
+    -   `<serviceName>/` - service directories organized by feature or domain;
+        - `api.ts` - API service file;
+        - `queries.ts` - file with queries and mutations hooks;
+        - `queryKeys.ts` - file with queries and mutations keys;
+        - `types.ts` - types of service file: request and response types;
+  
+
+### Application configuration & utilities
+
+-   `src/lib` - contains core application utilities and configurations:
+    -   `@http.ts` - HTTP client configuration and utilities;
+    -   `@queryClient.ts` - Tanstack Query client configuration;
+    -   `constants.ts` - global application constants;
+    -   `schemas.ts` - global validation schemas;
+    -   `regexps.ts` - global regular expressions;
+    -   `types.ts` - global TypeScript type definitions;
+    -   `utils/` - global utility functions directory:
+        -   `<utilDirName>/` - directory for grouped utility functions (optional);
+        -   `<utilName>.ts` - individual utility files;
+
+### Global application files
+
+-   `src/hooks` - contains global hooks directory:
+    -   `<hookName>.ts` - global hook files;
+-   `src/context` - global React context providers:
+    -   `<ContextName>.tsx` - global context files;
+-   `src/styles` - contains global style files:
+    -   `index.css` - the main CSS file;
+-   `public/` - can contain static files such as images, fonts, videos, documents, favicons, etc.;
+
+
+#### Build and output directories
+
+-   `dist/` - production build output directory (generated after `npm run build`);
+-   `tmp/` - temporary files directory containing:
+    -   `bundle-visualizer.html` - bundle size analysis report (generated after build with rollup-plugin-visualizer);
+
+
+#### Configuration files
+
+-   `index.html` - main HTML template file with meta tags, font loading, and root div element;
+-   `next.config.ts` - Next.js configuration;
+-   `tsconfig.json` - main TypeScript configuration;
+-   `tsconfig.app.json` - TypeScript configuration for application code;
+-   `tsconfig.node.json` - TypeScript configuration for Node.js;
+-   `package.json` - project dependencies, scripts, and metadata;
+-   `package-lock.json` - exact dependency versions lock file;
+
+#### Linting and formatting configuration
+
+-   `eslint.config.js` - ESLint configuration for JavaScript/TypeScript linting;
+-   `prettier.config.js` - Prettier configuration for code formatting;
+-   `.prettierignore` - files and directories to ignore during Prettier formatting;
+-   `.stylelintrc` - Stylelint configuration for CSS linting;
+
+#### Git and development configuration
+
+-   `.gitignore` - Git ignore rules specifying which files to exclude from version control;
+-   `.gitattributes` - Git attributes configuration for line endings and file handling;
+-   `.husky/` - Git hooks directory for pre-commit and commit-msg validation;
+-   `commitlint.config.cjs` - commit message linting configuration;
+
+#### Editor and environment configurations
+
+-   `.editorconfig` - editor configuration for consistent coding styles;
+-   `.npmrc` - NPM configuration settings;
+-   `.env.local.example` - example environment variables file (template for `.env.local`);
+-   `.env.local` - local environment variables (should be created manually, not committed to git);
+
+#### Query hooks
+
+Query hooks can have the parameters to be passed like pagination, search params etc. These parameters should be passed into hooks as arguments. Recommended to pass the arguments as list of arguments, not as the object.
+
+Query keys should be defined as described in [`Query keys`](#query-keys) section.
 
 Example:
 ```ts
-// @axios.ts
+export const useGetBooks = (search: string) => {
+    return useQuery({
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
+        // ...
+    })
+}
 
-export const http = axios.create(...);
-export const httpPrivate = axios.create(...);
+export const useGetBooksByAuthorName = (authorName: string, search: string) => {
+    return useQuery({
+        queryKey: BOOKS_QUERY_KEYS.itemByAuthor(authorName, { search })
+        // ...
+    })
+}
 ```
 
-API requests should:
-- be separated to files based on its scope. 
-  - Example: users requests -> `users.ts`; forms requests -> `forms.ts`
+##### Query Keys
 
-#### API queryClient options
+It is also recommended to manage query keys in appropriate way to use them inside project.
 
-When Tanstack Query is used, queryClient entity is created once on project start, and is used within all the application. By setting it in global api folder, we will be able to use it wherever needed in the app.
-
-The query client configuration file should be located at `src/tanstackQuery/@queryClient.ts` and include configuration as follows as bare minimum:
+First things first, you should create the constant that includes queryKeys:
 ```ts
-import { QueryClient } from '@tanstack/react-query';
+// src/services/books/queryKeys.ts
 
-export const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-            retry: 1,
-        },
-        mutations: {
-            retry: 1,
-        },
+export const BOOKS_QUERY_KEYS = {
+    all: ['books'] as const,
+    list() {
+        return [...BOOKS_QUERY_KEYS.all, 'list'] as const
     },
-});
+    listWithParams(params: { search: string }) {
+        return [...BOOKS_QUERY_KEYS.list(), params] as const
+    }
+    // ...
+}
 ```
 
-This configuration should be passed to `<QueryClientProvider />` in `src/main.tsx` file.
+>NOTE: Query keys contacts are allowed to be used in all the project to make invalidations and prefetched possible on a lot of events occur by user activities.
 
->NOTE: This configuration as allowed to be used wherever using `useQueryClient` hook is not allowed:
->- routes loaders
->- functions may include api logic (setting query data etc.)
+And apply this in:
+- Query hooks:
+  ```ts
+  export const useGetBooks = (search: string) => {
+    return useQuery({
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
+        // ...
+    })
+  }
+  ```
+- Query options:
+  ```ts
+  export const getBooksQueryOptions = (search: string) => {
+    return queryOption({
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
+        // ...
+    });
+  }
+
+  export const useGetBooks = (search: string) => {
+    return useQuery(getBooksQueryOptions(search));
+  }
+  ```
+- Query invalidations:
+  ```ts
+  import { BOOKS_QUERY_KEYS } from '@/services/books/queryKeys';
+
+  queryClient.invalidateQueries({
+    queryKey: BOOKS_QUERY_KEYS.list()
+  })
+  ```
+- Query prefetches:
+  ```ts
+  import { BOOKS_QUERY_KEYS } from '@/services/books/queryKeys';
+
+  queryClient.prefetchQuery({
+     queryKey: BOOKS_QUERY_KEYS.list()
+  })
+
+  // or
+
+  queryClient.getQueryData({
+     queryKey: BOOKS_QUERY_KEYS.list()
+  })
+  ```
+
+#### Mutation hooks
+
+Mutation hooks from `useMutation` return the callable function as result, so no need to pass the arguments into hook call. But everything can happen to pass initial arguments into hook body directly for query client logic or whatever.
+
+```ts
+// src/services/books/api.ts
+export const addBookToFavorites = (bookId: string) => {...}
+```
+
+```ts
+// src/services/books/queries.ts
+import { addBookToFavorites } from './api';
+
+export const addBookToFavoritesMutationOptions = () => {
+    return mutationOptions({
+        mutationFn: addBookToFavorites
+        // ...
+    })
+}
+```
+```ts
+// somewhere
+import { useMutation } from '@tanstack/react-query';
+import { addBookToFavoritesMutationOptions } from '@/services/books/queries';
+
+// ...
+
+const { mutate: addBookToFavorites } = useMutation(addBookToFavoritesMutationOptions());
+
+// ...
+
+addBookToFavorites(bookId, {...})
+```
 
 ### Contexts
 
@@ -204,144 +407,6 @@ Each hook should:
 // src/hooks/useHavePermissions.ts
 
 export const useHavePermissions = () => {...}
-```
-
-#### API hooks
-
-Because of using Tanstack query, and its hooks mechanic, following the TkDodo's recommendations, all API requests should be inside custom hooks that call `useQuery` and `useMutation` hooks. API requests were described in the relevant section above.
-
-API hooks should be located inside `src/tanstackQuery` folder.
-
-API hooks should:
-- be named for the api file. `src/api/users.ts` -> `src/tanstackQuery/users.ts`
-- contain all hooks for every function declared in the api requests file
-
-Single API hook should:
-- be named for the api request function. `<requestName>` -> `use<RequestName>`
-  - Example: `submitForm` -> `useSubmitForm`
-
-#### Query hooks
-
-Query hooks can have the parameters to be passed like pagination, search params etc. These parameters should be passed into hooks as arguments. Recommended to pass the arguments as list of arguments, not as the object.
-
-Query keys should be defined as described in [`Query keys`](#query-keys) section.
-
-Example:
-```ts
-export const useGetBooks = (search: string) => {
-    return useQuery({
-        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
-        // ...
-    })
-}
-
-export const useGetBooksByAuthorName = (authorName: string, search: string) => {
-    return useQuery({
-        queryKey: BOOKS_QUERY_KEYS.itemByAuthor(authorName, { search })
-        // ...
-    })
-}
-```
-
-##### Query Keys
-
-It is also recommended to manage query keys in appropriate way to use them inside project.
-
-First things first, you should create the constant that includes queryKeys:
-```ts
-// src/tanstackQuery/books.ts
-
-export const BOOKS_QUERY_KEYS = {
-    all: ['books'] as const,
-    list() {
-        return [...BOOKS_QUERY_KEYS.all, 'list'] as const
-    },
-    listWithParams(params: { search: string }) {
-        return [...BOOKS_QUERY_KEYS.list(), params] as const
-    }
-    // ...
-}
-```
-
->NOTE: Query keys contacts are allowed to be used in all the project to make invalidations and prefetched possible on a lot of events occur by user activities.
-
-And apply this in:
-- Query hooks:
-  ```ts
-  export const useGetBooks = (search: string) => {
-    return useQuery({
-        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
-        // ...
-    })
-  }
-  ```
-- Query options:
-  ```ts
-  export const getBooksQueryOptions = (search: string) => {
-    return queryOption({
-        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
-        // ...
-    });
-  }
-
-  export const useGetBooks = (search: string) => {
-    return getBooksQueryOptions(search);
-  }
-  ```
-- Query invalidations:
-  ```ts
-  import { BOOKS_QUERY_KEYS } from '@/tanstackQuery/books';
-
-  queryClient.invalidateQueries({
-    queryKey: BOOKS_QUERY_KEYS.list()
-  })
-  ```
-- Query prefetches:
-  ```ts
-  import { BOOKS_QUERY_KEYS } from '@/tanstackQuery/books';
-
-  queryClient.prefetchQuery({
-     queryKey: BOOKS_QUERY_KEYS.list()
-  })
-
-  // or
-
-  queryClient.getQueryData({
-     queryKey: BOOKS_QUERY_KEYS.list()
-  })
-  ```
-
-#### Mutation hooks
-
-Mutation hooks from `useMutation` return the callable function as result, so no need to pass the arguments into hook call. But everything can happen to pass initial arguments into hook body directly for query client logic or whatever.
-
-```ts
-// src/tanstackQuery/books.ts
-
-export const addBookToFavorites = (bookId: string) => {...}
-
-// src/tanstackQuery/books.ts
-
-import { addBookToFavorites } from '@/tanstackQuery/books';
-
-export const useAddBookToFavorites = () => {
-    return useMutation({
-        mutationFn: addBookToFavorites
-        // ...
-    })
-}
-
-// somewhere
-import { useAddBookToFavorites } from '@/tanstackQuery/books';
-
-// ...
-
-const { mutate: addBookToFavorites } = useAddBookToFavorites();
-
-// ...
-
-addBookToFavorites(bookId, {...})
-
 ```
 
 ### Utility functions

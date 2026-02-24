@@ -1,5 +1,5 @@
+import { mutationErrorHandler, queryErrorHandler } from '@/lib/utils/auth/errorHandler';
 import { defaultShouldDehydrateQuery, isServer, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
-import { mutationErrorHandler, queryErrorHandler } from '@/utils/auth/errorHandler';
 
 let browserQueryClient: QueryClient | undefined = undefined;
 

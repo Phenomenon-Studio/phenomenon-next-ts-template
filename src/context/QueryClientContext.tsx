@@ -1,7 +1,7 @@
 'use client';
 
-import { getQueryClient } from '@/tanstackQuery/@queryClient';
 import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/react-query';
+import { getQueryClient } from '@/queries/@queryClient';
 
 const QueryClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const queryClient = getQueryClient();
