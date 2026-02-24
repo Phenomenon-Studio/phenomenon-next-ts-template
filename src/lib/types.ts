@@ -9,7 +9,6 @@ export type WithClassName<T = unknown> = T & {
 
 export type SetStateValue<T> = React.Dispatch<React.SetStateAction<T>>;
 
-
 export type ResponseWithData<TBody = unknown> = {
     data: TBody;
 };
