@@ -1,14 +1,17 @@
 import type { Options } from 'ky';
-import { httpPrivate } from '@/api/@axios';
+import { httpPrivate } from '@/lib/@http';
 
 export const getUsers = async (options?: Options) => {
     const response = await httpPrivate.get('/api/users', options);
 
-    return response.data;
+    return response.json();
 };
 
 export const createUser = async (data: string, options?: Options) => {
-    const response = await httpPrivate.post<string>('/api/users', data, options);
+    const response = await httpPrivate.post<string>('/api/users', {
+        ...options,
+        json: data,
+    });
 
-    return response.data;
+    return response.json();
 };

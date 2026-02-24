@@ -1,5 +1,5 @@
 import type { KyInstance } from 'ky';
-import { JWT_AUTH_TOKEN_COOKIE_NAME } from '@/constants';
+import { JWT_AUTH_TOKEN_COOKIE_NAME } from './constants';
 
 export const createServerHttpPrivate = (http: KyInstance) => {
     return http.extend({
