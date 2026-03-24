@@ -16,16 +16,13 @@
         "prepare": "husky"
     },
     "browserslist": [
-        ">0.3%",
+        "> 0.3%",
         "not dead",
-        "not op_mini all",
-        "Firefox >= 93",
-        "Chrome >= 94",
-        "Edge >= 94",
-        "Opera >= 80",
-        "Safari >= 15.4",
-        "ios_saf >= 15.4",
-        "Samsung >= 17"
+        "Firefox >= 113",
+        "Chrome >= 111",
+        "Edge >= 111",
+        "Safari >= 16.4",
+        "ios_saf >= 16.4"
     ],
     "dependencies": {
         "@react-hookz/web": "^25.2.0",
@@ -63,9 +60,7 @@
         "eslint-config-next": "16.2.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.5",
-        "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-react": "^7.37.5",
-        "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-hooks": "^7.0.1",
         "husky": "^9.1.7",
         "npm-run-all": "^4.1.5",

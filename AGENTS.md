@@ -76,6 +76,10 @@ icons/              # SVG/TSX source assets
 ## Skills for agents
 
 - Project skills are in `.agents/skills/` and should be used when relevant:
-  - Next.js best practices
-  - React performance patterns
-  - Web security guidance
+  - `next-best-practices` — Next.js App Router patterns
+  - `vercel-react-best-practices` — React performance patterns
+  - `web-security` — OWASP/security guidance
+  - `tanstack-query-best-practices` — TanStack Query 5 patterns
+  - `nuqs-url-state` — URL state with nuqs (filters, pagination, deep links)
+  - `zod-v4` — Zod 4 schemas and API (breaking changes vs Zod 3)
+  - `grill-me` — stress-test plans before implementation
