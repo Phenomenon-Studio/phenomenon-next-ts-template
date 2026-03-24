@@ -1,6 +1,7 @@
 import type { KyInstance } from 'ky';
 import { redirect, RedirectType } from 'next/navigation';
 import ky from 'ky';
+import { getQueryClient } from '@/services/@queryClient';
 import { refreshToken } from '@/services/auth/api';
 import {
     getAuthTokenFromServerSideCookies,
@@ -8,6 +9,16 @@ import {
     removeJWTCookiesOnServerSide,
     setJWTCookiesOnServerSide,
 } from './utils/auth/jwt/server';
+
+const redirectToLogin = async () => {
+    const queryClient = getQueryClient();
+
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await removeJWTCookiesOnServerSide();
+
+    redirect('/login', RedirectType.replace);
+};
 
 export const createServerHttpPrivate = (http: KyInstance) => {
     return http.extend({
@@ -22,16 +33,19 @@ export const createServerHttpPrivate = (http: KyInstance) => {
                 },
             ],
             afterResponse: [
-                async (request, options, response) => {
+                async (request, options, response, state) => {
                     if (response.status === 401) {
-                        const refreshTokenFromCookie = await getRefreshTokenFromServerSideCookies();
-
-                        if (!refreshTokenFromCookie) {
-                            await removeJWTCookiesOnServerSide();
-                            redirect('/login', RedirectType.replace);
+                        if (state.retryCount) {
+                            return await redirectToLogin();
                         }
 
                         try {
+                            const refreshTokenFromCookie = await getRefreshTokenFromServerSideCookies();
+
+                            if (!refreshTokenFromCookie) {
+                                return await redirectToLogin();
+                            }
+
                             const newAccessToken = await refreshToken({
                                 refreshToken: refreshTokenFromCookie as string,
                             });
@@ -46,8 +60,7 @@ export const createServerHttpPrivate = (http: KyInstance) => {
 
                             return ky(newRequest, options);
                         } catch {
-                            await removeJWTCookiesOnServerSide();
-                            redirect('/login', RedirectType.replace);
+                            return await redirectToLogin();
                         }
                     }
                 },

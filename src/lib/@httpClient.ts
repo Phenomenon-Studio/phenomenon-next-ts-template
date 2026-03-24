@@ -4,7 +4,7 @@ import { getQueryClient } from '@/services/@queryClient';
 import { refreshToken } from '@/services/auth/api';
 import { CUSTOM_EVENTS_NAMES, JWT_AUTH_TOKEN_COOKIE_NAME } from './constants';
 import {
-    getAuthTokenFromClientSideCookies,
+    getRefreshTokenFromClientSideCookies,
     removeJWTCookies,
     setJWTCookiesOnClientSide,
 } from './utils/auth/jwt/client';
@@ -37,7 +37,7 @@ const redirectToLogin = async () => {
 
     if (!window.location.pathname.startsWith('/login')) {
         const loginUrl = new URL(`/login?from=${window.location.pathname}`, origin);
-        window.location.href = loginUrl.origin;
+        window.location.href = loginUrl.href;
     }
 };
 
@@ -62,29 +62,29 @@ export const createClientHttpPrivate = (http: KyInstance) => {
                             return await redirectToLogin();
                         }
 
-                        const refreshTokenFromCookie = await getAuthTokenFromClientSideCookies();
-
-                        if (!refreshTokenFromCookie) {
-                            return await redirectToLogin();
-                        }
-
-                        if (isRefreshing) {
-                            return new Promise<string>((resolve, reject) => {
-                                failedQueue.push({ resolve, reject });
-                            })
-                                .then((token) => {
-                                    request.headers.set('Authorization', `Bearer ${token}`);
-
-                                    return ky(request, options);
-                                })
-                                .catch((err) => {
-                                    return Promise.reject(err);
-                                });
-                        }
-
-                        isRefreshing = true;
-
                         try {
+                            const refreshTokenFromCookie = await getRefreshTokenFromClientSideCookies();
+
+                            if (!refreshTokenFromCookie) {
+                                return await redirectToLogin();
+                            }
+
+                            if (isRefreshing) {
+                                return new Promise<string>((resolve, reject) => {
+                                    failedQueue.push({ resolve, reject });
+                                })
+                                    .then((token) => {
+                                        request.headers.set('Authorization', `Bearer ${token}`);
+
+                                        return ky(request, options);
+                                    })
+                                    .catch((err) => {
+                                        return Promise.reject(err);
+                                    });
+                            }
+
+                            isRefreshing = true;
+
                             const newAccessToken = await refreshToken({
                                 refreshToken: refreshTokenFromCookie as string,
                             });

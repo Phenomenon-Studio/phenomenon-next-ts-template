@@ -21,3 +21,5 @@ export const JWT_COOKIE_OPTIONS = {
 export const CUSTOM_EVENTS_NAMES = {
     refreshTokenFailed: 'REFRESH_TOKEN_FAILED',
 };
+
+export const pluralRules = new Intl.PluralRules('en-US');

@@ -1,10 +1,9 @@
 'use client';
 
-import { memo } from 'react';
 import clsx from 'clsx';
 import PhenomenonMarkIcon from '@/icons/PhenomenonMarkIcon';
 import { CURRENT_YEAR } from './constants';
-import Counter from './components/Counter';
+import { Counter } from './components/Counter';
 import s from './styles.module.css';
 
 const Home: React.FC = () => {
@@ -29,4 +28,4 @@ const Home: React.FC = () => {
     );
 };
 
-export default memo(Home);
+export default Home;

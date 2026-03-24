@@ -8,5 +8,5 @@ export const isJWTExpired = async (token: string) => {
 
     // Add 60 second buffer for clock skew
     const now = Math.floor(Date.now() / 1000);
-    return decoded.exp < now - 60;
+    return decoded.exp < now + 60;
 };

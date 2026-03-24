@@ -1,5 +1,6 @@
 import type { Options } from 'ky';
 import ky from 'ky';
+import { ONE_SECOND } from './constants';
 import { createClientHttpPrivate } from './@httpClient';
 import { createServerHttpPrivate } from './@httpServer';
 import { env } from './env';
@@ -18,7 +19,7 @@ export type BaseErrorData<TData = unknown> = { message: string } & TData;
 
 export const http = ky.create({
     prefixUrl: env.NEXT_PUBLIC_API_URL,
-    timeout: false,
+    timeout: 30 * ONE_SECOND,
     retry: 0,
 });
 

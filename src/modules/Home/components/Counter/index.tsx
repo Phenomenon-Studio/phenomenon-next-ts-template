@@ -1,23 +1,23 @@
 'use client';
 
-import { memo, useCallback, useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import s from './styles.module.css';
 
-const Counter: React.FC = () => {
-    const [count, setCount] = useState(0);
+export const Counter: React.FC = () => {
+    const [count, setCount] = React.useState(0);
 
-    const increment = useCallback(() => {
+    const increment = () => {
         setCount((prev) => {
             return prev + 1;
         });
-    }, []);
+    };
 
-    const decrement = useCallback(() => {
+    const decrement = () => {
         setCount((prev) => {
             return prev - 1;
         });
-    }, []);
+    };
 
     return (
         <article className={s.wrap}>
@@ -35,5 +35,3 @@ const Counter: React.FC = () => {
         </article>
     );
 };
-
-export default memo(Counter);

@@ -1,4 +1,5 @@
-import { redirect, RedirectType } from 'next/navigation';
+'use client';
+
 import { mutationOptions } from '@tanstack/react-query';
 import { setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
 import { queryKeyFactory } from '@/services/@queryKeyFactory';
@@ -39,7 +40,7 @@ export const logoutMutationOptions = () => {
         },
         mutationFn: logout,
         onSuccess() {
-            redirect('/login', RedirectType.replace);
+            window.location.replace('/login');
         },
     });
 };

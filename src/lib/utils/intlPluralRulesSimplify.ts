@@ -1,3 +1,5 @@
+import { pluralRules } from '@/lib/constants';
+
 export type IntlPluralSimplifyForms = Record<Extract<Intl.LDMLPluralRule, 'one' | 'many'>, string> &
     Partial<Record<Exclude<Intl.LDMLPluralRule, 'one' | 'many'>, string>>;
 
@@ -14,7 +16,6 @@ export type IntlPluralSimplifyForms = Record<Extract<Intl.LDMLPluralRule, 'one' 
  * console.log(plural); // 'apples'
  */
 export const intlPluralRulesSimplify = (value: number, forms: IntlPluralSimplifyForms) => {
-    const pluralRules = new Intl.PluralRules('en-US');
     const rule = pluralRules.select(value);
 
     return forms?.[rule] ?? forms.many;
