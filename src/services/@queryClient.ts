@@ -1,5 +1,5 @@
-import { getKyErrorMessage } from '@/lib/utils/getKyErrorMessage';
 import { defaultShouldDehydrateQuery, environmentManager, MutationCache, QueryClient } from '@tanstack/react-query';
+import { getKyErrorMessage } from '@/lib/utils/getKyErrorMessage';
 
 let browserQueryClient: QueryClient | undefined = undefined;
 

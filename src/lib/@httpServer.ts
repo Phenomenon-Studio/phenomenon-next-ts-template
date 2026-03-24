@@ -1,7 +1,7 @@
 import type { KyInstance } from 'ky';
 import { redirect, RedirectType } from 'next/navigation';
-import { refreshToken } from '@/services/auth/api';
 import ky from 'ky';
+import { refreshToken } from '@/services/auth/api';
 import {
     getAuthTokenFromServerSideCookies,
     getRefreshTokenFromServerSideCookies,

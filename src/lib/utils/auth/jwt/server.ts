@@ -2,6 +2,7 @@
 
 import type { DecodedJWT } from '@/lib/types';
 import { cookies } from 'next/headers';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next/server';
 import {
     JWT_AUTH_TOKEN_COOKIE_NAME,
     JWT_COOKIE_OPTIONS,
@@ -9,7 +10,6 @@ import {
     ONE_DAY,
     ONE_SECOND,
 } from '@/lib/constants';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next/server';
 import { decodeJWTPayload } from './decodeJWTPayload';
 
 /**

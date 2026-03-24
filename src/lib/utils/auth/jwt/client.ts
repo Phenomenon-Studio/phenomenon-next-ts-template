@@ -1,10 +1,10 @@
+import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 import {
     JWT_AUTH_TOKEN_COOKIE_NAME,
     JWT_COOKIE_OPTIONS,
     JWT_REFRESH_TOKEN_COOKIE_NAME,
     ONE_DAY,
 } from '@/lib/constants';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
 // eslint-disable-next-line require-await
 export const getAuthTokenFromClientSideCookies = async () => {

@@ -1,7 +1,7 @@
 import type { KyInstance } from 'ky';
+import ky from 'ky';
 import { getQueryClient } from '@/services/@queryClient';
 import { refreshToken } from '@/services/auth/api';
-import ky from 'ky';
 import { CUSTOM_EVENTS_NAMES, JWT_AUTH_TOKEN_COOKIE_NAME } from './constants';
 import {
     getAuthTokenFromClientSideCookies,

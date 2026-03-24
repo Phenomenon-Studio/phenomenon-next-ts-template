@@ -1,6 +1,6 @@
 import { redirect, RedirectType } from 'next/navigation';
-import { setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
 import { mutationOptions } from '@tanstack/react-query';
+import { setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
 import { login, logout, signUp } from './api';
 import { authQueryKeys } from './queryKeys';
 
