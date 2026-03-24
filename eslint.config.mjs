@@ -6,6 +6,7 @@ import pluginTanstackQuery from '@tanstack/eslint-plugin-query';
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import nextTypescript from 'eslint-config-next/typescript';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,8 +23,10 @@ const eslintConfig = [
     ...nextCoreWebVitals,
     ...nextTypescript,
     ...pluginTanstackQuery.configs['flat/recommended'],
+    reactHooks.configs.flat['recommended-latest'],
     eslintPluginPrettierRecommended,
     ...compat.extends('prettier', 'plugin:react/recommended'),
+
     {
         rules: {
             'react/react-in-jsx-scope': ['off'],
