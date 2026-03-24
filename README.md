@@ -37,19 +37,6 @@ Table of contents:
     - [Modules](#modules)
       - [Submodules](#submodules)
   - [✳️ Icons Usage](#️-icons-usage)
->>>>>>> 29fe05584895d184f169bfbca0c628abd5877e7a
-    - [Stores](#stores)
-    - [Hooks](#hooks)
-    - [Utility functions](#utility-functions)
-    - [Constants](#constants)
-      - [Schemas](#schemas)
-    - [Types](#types)
-    - [Styles](#styles)
-    - [Components](#components)
-      - [Anatomy](#anatomy)
-    - [Modules](#modules)
-      - [Submodules](#submodules)
-  - [✳️ Icons Usage](#️-icons-usage)
 ---
 
 ## 📦 Stack
@@ -175,10 +162,10 @@ Table of contents:
 ### Services & API layer  
 
 -   `src/services` - contains service layer for API calls and external integrations:
+    -   `@queryKeyFactory.ts` - shared factory that creates a type-safe, scoped key generator for any domain;
     -   `<serviceName>/` - service directories organized by feature or domain;
-        - `api.ts` - API service file;
-        - `queries.ts` - file with queries and mutations hooks;
-        - `queryKeys.ts` - file with queries and mutations keys;
+        - `api.ts` - API request functions;
+        - `queries.ts` - query/mutation option factories and hook adapters; query keys are defined inline using `queryKeyFactory`;
         - `types.ts` - types of service file: request and response types;
   
 
@@ -257,94 +244,62 @@ Table of contents:
 
 #### Query hooks
 
-Query hooks can have the parameters to be passed like pagination, search params etc. These parameters should be passed into hooks as arguments. Recommended to pass the arguments as list of arguments, not as the object.
+Query hooks can have parameters passed like pagination, search params, etc. These should be passed as arguments. Recommended to pass arguments as a list of arguments, not as an object.
 
-Query keys should be defined as described in [`Query keys`](#query-keys) section.
-
-Example:
-```ts
-export const getBooksQueryOptions = (search: string) => {
-    return queryOptions({
-        queryKey: booksQueryKeys.listWithParams({ search })
-        // ...
-    })
-}
-
-export const getBooksByAuthorNameQueryOptions = (authorName: string, search: string) => {
-    return queryOptions({
-        queryKey: booksQueryKeys.itemByAuthor(authorName, { search })
-        // ...
-    })
-}
-```
+Query keys are created with the shared `queryKeyFactory` — no separate file or config is needed.
 
 ##### Query Keys
 
-It is also recommended to manage query keys in appropriate way to use them inside project.
+All query keys are generated with `queryKeyFactory` from `src/services/@queryKeyFactory.ts`. Create a scoped key generator at the top of `queries.ts` for the domain, then use it inline:
 
-First things first, you should create the constant that includes queryKeys:
 ```ts
-// src/services/books/queryKeys.ts
+// src/services/books/queries.ts
+import { queryKeyFactory } from '@/services/@queryKeyFactory';
 
-export const booksQueryKeys = {
-    all: ['books'] as const,
-    list() {
-        return [...booksQueryKeys.all, 'list'] as const
-    },
-    listWithParams(params: { search: string }) {
-        return [...booksQueryKeys.list(), params] as const
-    }
-    // ...
-}
+const booksQueryKey = queryKeyFactory('books');
+
+// key without payload → ['books', 'getBooks']
+// key with payload   → ['books', 'getBooks', { search }]
 ```
 
->NOTE: Query keys contacts are allowed to be used in all the project to make invalidations and prefetched possible on a lot of events occur by user activities.
+The factory is called with `(operation)` or `(operation, payload)`:
 
-And apply this in:
-- Query hooks:
-  ```ts
-  export const useGetBooks = (search: string) => {
-    return useQuery({
-        queryKey: booksQueryKeys.listWithParams({ search })
-        // ...
-    })
-  }
-  ```
-- Query options:
-  ```ts
-  export const getBooksQueryOptions = (search: string) => {
-    return queryOption({
-        queryKey: booksQueryKeys.listWithParams({ search })
-        // ...
+```ts
+booksQueryKey('getBooks')               // → readonly ['books', 'getBooks']
+booksQueryKey('getBooks', { search })   // → readonly ['books', 'getBooks', { search }]
+```
+
+Apply the scoped key generator in query/mutation options:
+
+```ts
+// src/services/books/queries.ts
+import { queryOptions } from '@tanstack/react-query';
+import { queryKeyFactory } from '@/services/@queryKeyFactory';
+import { getBooks } from './api';
+
+const booksQueryKey = queryKeyFactory('books');
+
+export const getBooksQueryOptions = (search: string) => {
+    return queryOptions({
+        queryKey: booksQueryKey('getBooks', { search }),
+        queryFn({ signal }) {
+            return getBooks({ signal, searchParams: { search } });
+        },
     });
-  }
-  ```
-- Query invalidations:
-  ```ts
-  import { booksQueryKeys } from '@/services/books/queryKeys';
+};
+```
 
-  queryClient.invalidateQueries({
-    queryKey: booksQueryKeys.list()
-  })
+For invalidations and prefetches, import the options factory and pass it directly, or reconstruct the key:
 
-  // or
-  
-  queryClient.invalidateQueries(getBooksQueryOptions())
-  ```
-- Query prefetches:
-  ```ts
-  import { booksQueryKeys } from '@/services/books/queryKeys';
+```ts
+// Query invalidation
+queryClient.invalidateQueries(getBooksQueryOptions(search));
 
-  queryClient.prefetchQuery({
-     queryKey: booksQueryKeys.list()
-  })
+// Prefetch
+queryClient.prefetchQuery(getBooksQueryOptions(search));
+```
 
-  // or
-
-  queryClient.getQueryData({
-     queryKey: booksQueryKeys.list()
-  })
-  ```
+> NOTE: There is no standalone `queryKeys.ts` file per domain. Keys live in `queries.ts` via the factory so that the operation name, payload shape, and key are always co-located.
 
 #### Mutation hooks
 
@@ -357,12 +312,16 @@ export const addBookToFavorites = (bookId: string) => {...}
 
 ```ts
 // src/services/books/queries.ts
+import { mutationOptions } from '@tanstack/react-query';
+import { queryKeyFactory } from '@/services/@queryKeyFactory';
 import { addBookToFavorites } from './api';
+
+const booksQueryKey = queryKeyFactory('books');
 
 export const addBookToFavoritesMutationOptions = () => {
     return mutationOptions({
-        mutationFn: addBookToFavorites
-        // ...
+        mutationKey: booksQueryKey('addBookToFavorites'),
+        mutationFn: addBookToFavorites,
     })
 }
 ```

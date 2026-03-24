@@ -39,7 +39,7 @@ app/           thin route files only; render a module from modules/
 modules/       route-level features; root module components have NO props
 components/    reusable composed components; may use components/ui/
 components/ui/ primitive only; must NOT import from components/
-services/      domain API layer: api.ts · queryKeys.ts · queries.ts · types.ts
+services/      domain API layer: @queryKeyFactory.ts (shared) · <domain>/api.ts · queries.ts · types.ts
 lib/           cross-cutting infra (HTTP client, env, constants, types, utils)
 hooks/         shared hooks only; colocate feature hooks near their feature
 ```
@@ -49,7 +49,7 @@ hooks/         shared hooks only; colocate feature hooks near their feature
 - Hooks: `useSomething.ts` — filename matches exported symbol
 - Schemas: `somethingSchema.ts` — export schema + `z.infer` type
 - Components/modules: `PascalCase/index.tsx` — default export
-- Query keys: `<domain>QueryKeys` object; reuse for invalidation and prefetch
+- Query keys: `queryKeyFactory('<domain>')` called at top of `queries.ts`; no per-domain `queryKeys.ts` file
 - Stores (Zustand): `<name>Store.ts` — exports `use<Name>Store`
 - Icons: `kebab-case_<size>.svg` (e.g. `arrow-left_16.svg`)
 

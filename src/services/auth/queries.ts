@@ -1,12 +1,14 @@
 import { redirect, RedirectType } from 'next/navigation';
 import { mutationOptions } from '@tanstack/react-query';
 import { setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
+import { queryKeyFactory } from '@/services/@queryKeyFactory';
 import { login, logout, signUp } from './api';
-import { authQueryKeys } from './queryKeys';
+
+const authQueryKey = queryKeyFactory('auth');
 
 export const loginMutationOptions = () => {
     return mutationOptions({
-        mutationKey: authQueryKeys.login(),
+        mutationKey: authQueryKey('login'),
         meta: {
             successMessage: 'Login successful. Redirecting to dashboard...',
             showSuccessMessage: true,
@@ -20,7 +22,7 @@ export const loginMutationOptions = () => {
 
 export const signUpMutationOptions = () => {
     return mutationOptions({
-        mutationKey: authQueryKeys.signUp(),
+        mutationKey: authQueryKey('signUp'),
         meta: {
             successMessage: 'Sign up successful. We sent you a confirmation email. Please check your inbox.',
             showSuccessMessage: true,
@@ -31,7 +33,7 @@ export const signUpMutationOptions = () => {
 
 export const logoutMutationOptions = () => {
     return mutationOptions({
-        mutationKey: authQueryKeys.logout(),
+        mutationKey: authQueryKey('logout'),
         meta: {
             showErrorMessage: true,
         },
