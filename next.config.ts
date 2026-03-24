@@ -1,6 +1,21 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+    reactCompiler: true,
+    reactStrictMode: true,
+    outputFileTracingRoot: import.meta.dirname,
+    compiler: {
+        removeConsole: process.env.NODE_ENV === 'production',
+    },
+    turbopack: {
+        root: import.meta.dirname,
+        rules: {
+            '*.svg': {
+                as: '*.js',
+                loaders: ['@svgr/webpack'],
+            },
+        },
+    },
     webpack(config) {
         // Grab the existing rule that handles SVG imports
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

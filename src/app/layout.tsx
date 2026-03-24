@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import QueryClientProvider from '@/context/QueryClientContext';
+import QueryClientProvider from '@/providers/QueryClientProvider';
 import '@/styles/index.css';
 
 const syneSans = localFont({

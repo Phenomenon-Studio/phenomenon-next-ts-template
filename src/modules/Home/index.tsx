@@ -1,8 +1,8 @@
 'use client';
 
 import { memo } from 'react';
+import PhenomenonMarkIcon from '@/icons/PhenomenonMarkIcon';
 import clsx from 'clsx';
-import PhenomenonMarkIcon from '@/ui/icons/PhenomenonMarkIcon';
 import { CURRENT_YEAR } from './constants';
 import Counter from './components/Counter';
 import s from './styles.module.css';
