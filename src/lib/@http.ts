@@ -1,7 +1,6 @@
 import ky, { Options } from 'ky';
 import { createClientHttpPrivate } from './@httpClient';
 import { createServerHttpPrivate } from './@httpServer';
-import { env } from './env';
 
 export interface OptionsWithTypedJson<TJson> extends Options {
     json: TJson;
@@ -16,7 +15,7 @@ export interface OptionsWithTypedBody<TBody extends BodyInit | null | undefined>
 export type BaseErrorData<TData = unknown> = { message: string } & TData;
 
 export const http = ky.create({
-    prefixUrl: env.NEXT_PUBLIC_API_URL,
+    prefixUrl: process.env.NEXT_PUBLIC_API_URL,
     timeout: false,
     retry: 0,
 });

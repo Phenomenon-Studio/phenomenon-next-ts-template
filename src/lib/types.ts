@@ -1,6 +1,6 @@
 export type ObjValues<T> = T[keyof T];
 
-export type WithClassName<T> = T & {
+export type WithClassName<T = unknown> = T & {
     /**
         Extendable classnames of component
     */
@@ -8,15 +8,6 @@ export type WithClassName<T> = T & {
 };
 
 export type SetStateValue<T> = React.Dispatch<React.SetStateAction<T>>;
-
-export type DecodedJWT = {
-    sub: string; // User ID (uid)
-    email: string;
-    iat: number;
-    exp: number;
-};
-
-export type SvgrIcon = React.FC<React.SVGProps<SVGSVGElement>>;
 
 export type ResponseWithData<TBody = unknown> = {
     data: TBody;

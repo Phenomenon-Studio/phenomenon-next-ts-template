@@ -20,11 +20,10 @@ Table of contents:
       - [Linting and formatting configuration](#linting-and-formatting-configuration)
       - [Git and development configuration](#git-and-development-configuration)
       - [Editor and environment configurations](#editor-and-environment-configurations)
-      - [Agents configuration](#agents-configuration)
       - [Query hooks](#query-hooks)
         - [Query Keys](#query-keys)
       - [Mutation hooks](#mutation-hooks)
-    - [Contexts/providers](#contextsproviders)
+    - [Contexts](#contexts)
     - [Stores](#stores)
     - [Hooks](#hooks)
     - [Utility functions](#utility-functions)
@@ -49,12 +48,13 @@ Table of contents:
 -   [Ky](https://github.com/sindresorhus/ky) - Modern HTTP client;
 -   [Nuqs](https://nuqs.dev/) - URL state management;
 -   [Zod](https://zod.dev/) - Schema validation
+-   [Tanstack Form](https://tanstack.com/form/latest) - Form management
 -   [ESLint](https://eslint.org), [Prettier](https://prettier.io), [StyleLint](https://stylelint.io), [Husky](https://typicode.github.io/husky) - Code quality and formatting;
 
 ## 🚀 Quick start
 
 1. Install [Node.js](https://nodejs.org);
-    > Require [Node.js](https://nodejs.org) >=v22 (Jod as minimum)
+    > Require [Node.js](https://nodejs.org) v18 or >=v20 (hydrogen as minimum)
 2. Install the NPM dependencies by running `npm ci`;
 3. You should create `.env.local` and add variables. You can look in [.env.local.example](./.env.local.example) file;
 4. Update project metadata:
@@ -72,10 +72,6 @@ Table of contents:
 -   Run the local dev server at `localhost:3000`:
     ```
     npm run dev
-    ```
--   Run the local dev server at `localhost:3000` with scanning mode:
-    ```
-    npm run dev:scan
     ```
 -   Build your production site to `./.next/`:
     ```
@@ -115,15 +111,14 @@ Table of contents:
     -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
     -   `types.ts` - types of component file (optional);
     -   `hooks` - contains component hooks dir (optional). Should consist of:
-        -   `use<hookName>.ts` - the hook file itself;
+        -   `<hookName>.ts` - the hook file itself;
     -   `constants.ts` - constants of component file (optional);
     -   `utils` - utils dir of component file (optional). Should consist of:
         -   `<utilName>.ts` - the util file itself;
-    -   `schemas` - schemas dir of component file (optional). Should consist of:
-        -   `<schemaName>Schema.ts` - the schema file itself with inferred type;
+    -   `schemas.ts` - schemas of component file (optional);
     -   `regexps.ts` - regexps of component file (optional);
-    -   `providers` - the providers dir of component file (optional). Should consist of:
-        -   `<ProviderName>Provider.tsx` - the provider file itself;
+    -   `context` - the context dir of component file (optional). Should consist of:
+        -   `<ContextName>.tsx` - the context file itself;
     -   `components` - the components dir of components (optional). Should consist of like `src/components`;
 
 -   `src/components/layouts` - contains layout components for different application layouts. Each layout component should:
@@ -135,10 +130,9 @@ Table of contents:
     -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
     -   `types.ts` - types of component file (optional);
     -   `hooks` - contains component hooks dir (optional). Should consist of:
-        -   `use<hookName>.ts` - the hook file itself;
+        -   `<hookName>.ts` - the hook file itself;
     -   `constants.ts` - constants of component file (optional);
-    -   `schemas` - schemas dir of component file (optional). Should consist of:
-        -   `<schemaName>Schema.ts` - the schema file itself with inferred type;
+    -   `schemas.ts` - schemas of component file (optional);
     -   `regexps.ts` - regexps of component file (optional);
     -   `utils` - utils dir of component file (optional). Should consist of:
         -   `<utilName>.ts` - the util file itself;
@@ -148,15 +142,14 @@ Table of contents:
     -   `styles.module.css` - styles of component file. This file is optional, since we use TailwindCSS;
     -   `types.ts` - types of component file (optional);
     -   `hooks` - contains component hooks dir (optional). Should consist of:
-        -   `use<hookName>.ts` - the hook file itself;
+        -   `<hookName>.ts` - the hook file itself;
     -   `constants.ts` - constants of component file (optional);
     -   `utils` - utils dir of component file (optional). Should consist of:
         -   `<utilName>.ts` - the util file itself;
-    -   `schemas` - schemas dir of component file (optional). Should consist of:
-        -   `<schemaName>Schema.ts` - the schema file itself with inferred type;
+    -   `schemas.ts` - schemas of component file (optional);
     -   `regexps.ts` - regexps of component file (optional);
-    -   `providers` - the providers dir of component file (optional). Should consist of:
-        -   `<ProviderName>Provider.tsx` - the provider file itself;
+    -   `context` - the context dir of component file (optional). Should consist of:
+        -   `<ContextName>.tsx` - the context file itself;
     -   `components` - the components dir of components (optional). Should consist of like `src/components`;
 
 ### Services & API layer  
@@ -175,8 +168,7 @@ Table of contents:
     -   `@http.ts` - HTTP client configuration and utilities;
     -   `@queryClient.ts` - Tanstack Query client configuration;
     -   `constants.ts` - global application constants;
-    -   `schemas` - global validation schemas dir. Should consist of:
-        -   `<schemaName>Schema.ts` - the schema file itself with inferred type;
+    -   `schemas.ts` - global validation schemas;
     -   `regexps.ts` - global regular expressions;
     -   `types.ts` - global TypeScript type definitions;
     -   `utils/` - global utility functions directory:
@@ -186,9 +178,9 @@ Table of contents:
 ### Global application files
 
 -   `src/hooks` - contains global hooks directory:
-    -   `use<hookName>.ts` - global hook files;
--   `src/providers` - global React providers:
-    -   `<ProviderName>Provider.tsx` - global provider files;
+    -   `<hookName>.ts` - global hook files;
+-   `src/context` - global React context providers:
+    -   `<ContextName>.tsx` - global context files;
 -   `src/styles` - contains global style files:
     -   `index.css` - the main CSS file;
 -   `public/` - can contain static files such as images, fonts, videos, documents, favicons, etc.;
@@ -210,7 +202,6 @@ Table of contents:
 -   `tsconfig.node.json` - TypeScript configuration for Node.js;
 -   `package.json` - project dependencies, scripts, and metadata;
 -   `package-lock.json` - exact dependency versions lock file;
--   `skills-lock.json` - agents skills lock file;
 
 #### Linting and formatting configuration
 
@@ -232,15 +223,6 @@ Table of contents:
 -   `.npmrc` - NPM configuration settings;
 -   `.env.local.example` - example environment variables file (template for `.env.local`);
 -   `.env.local` - local environment variables (should be created manually, not committed to git);
-  
-#### Agents configuration
--   `.agents/` - agents directory. Should consist of:
-    -   `skills/` - agents skills directory. Should consist of:
-        -   `<skillName>/` - agent skill directory. Should consist of:
-            -   `README.md` - agent skill README file;
-            -   `skill.md` - agent skill file;
-    -   `README.md` - agents README file;
--   `skills-lock.json` - agents skills lock file;
 
 #### Query hooks
 
@@ -250,16 +232,16 @@ Query keys should be defined as described in [`Query keys`](#query-keys) section
 
 Example:
 ```ts
-export const getBooksQueryOptions = (search: string) => {
-    return queryOptions({
-        queryKey: booksQueryKeys.listWithParams({ search })
+export const useGetBooks = (search: string) => {
+    return useQuery({
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
         // ...
     })
 }
 
-export const getBooksByAuthorNameQueryOptions = (authorName: string, search: string) => {
-    return queryOptions({
-        queryKey: booksQueryKeys.itemByAuthor(authorName, { search })
+export const useGetBooksByAuthorName = (authorName: string, search: string) => {
+    return useQuery({
+        queryKey: BOOKS_QUERY_KEYS.itemByAuthor(authorName, { search })
         // ...
     })
 }
@@ -273,13 +255,13 @@ First things first, you should create the constant that includes queryKeys:
 ```ts
 // src/services/books/queryKeys.ts
 
-export const booksQueryKeys = {
+export const BOOKS_QUERY_KEYS = {
     all: ['books'] as const,
     list() {
-        return [...booksQueryKeys.all, 'list'] as const
+        return [...BOOKS_QUERY_KEYS.all, 'list'] as const
     },
     listWithParams(params: { search: string }) {
-        return [...booksQueryKeys.list(), params] as const
+        return [...BOOKS_QUERY_KEYS.list(), params] as const
     }
     // ...
 }
@@ -292,7 +274,7 @@ And apply this in:
   ```ts
   export const useGetBooks = (search: string) => {
     return useQuery({
-        queryKey: booksQueryKeys.listWithParams({ search })
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
         // ...
     })
   }
@@ -301,35 +283,35 @@ And apply this in:
   ```ts
   export const getBooksQueryOptions = (search: string) => {
     return queryOption({
-        queryKey: booksQueryKeys.listWithParams({ search })
+        queryKey: BOOKS_QUERY_KEYS.listWithParams({ search })
         // ...
     });
+  }
+
+  export const useGetBooks = (search: string) => {
+    return useQuery(getBooksQueryOptions(search));
   }
   ```
 - Query invalidations:
   ```ts
-  import { booksQueryKeys } from '@/services/books/queryKeys';
+  import { BOOKS_QUERY_KEYS } from '@/services/books/queryKeys';
 
   queryClient.invalidateQueries({
-    queryKey: booksQueryKeys.list()
+    queryKey: BOOKS_QUERY_KEYS.list()
   })
-
-  // or
-  
-  queryClient.invalidateQueries(getBooksQueryOptions())
   ```
 - Query prefetches:
   ```ts
-  import { booksQueryKeys } from '@/services/books/queryKeys';
+  import { BOOKS_QUERY_KEYS } from '@/services/books/queryKeys';
 
   queryClient.prefetchQuery({
-     queryKey: booksQueryKeys.list()
+     queryKey: BOOKS_QUERY_KEYS.list()
   })
 
   // or
 
   queryClient.getQueryData({
-     queryKey: booksQueryKeys.list()
+     queryKey: BOOKS_QUERY_KEYS.list()
   })
   ```
 
@@ -367,19 +349,25 @@ const { mutate: addBookToFavorites } = useMutation(addBookToFavoritesMutationOpt
 addBookToFavorites(bookId, {...})
 ```
 
-### Contexts/providers
+### Contexts
 
 Contexts are optional for the root of the project and components among all the project.
 
-No matter, where the providers will appear, they should:
-- Have separate `providers` folder inside the folder where the providers will be used
-  - Global providers will be used in all the project, should be located at `src/providers` folder. NOTE: Any component is allowed to call such providers.
-  - If provider will be used inside single component exclusively, you should create `providers` folder inside the component folder. Example: `src/components/ArticleCard/providers`. NOTE: such providers are not allowed to be used outside of the component scope where the providers folder were created. If such case appears, then you should move the provider(s) into global providers folder. The child components (`src/components/ArticleCard/components/*`) only are allowed to use the provider inside
+No matter, where the contexts will appear, they should:
+- Have separate `contexts` folder inside the folder where the hooks will be used
+  - Global contexts will be used in all the project, should be located at `src/contexts` folder. NOTE: Any component is allowed to call such contexts.
+  - If context will be used inside single component exclusively, you should create `contexts` folder inside the component folder. Example: `src/components/ArticleCard/contexts`. NOTE: such contexts are not allowed to be used outside of the component scope where the hooks folder were created. If such case appears, then you should move the hook(s) into global hooks folder. The child components (`src/components/ArticleCard/components/*`) only are allowed to use the context inside
 
-Each provider should:
-- Be created inside the `providers` folder
-- Have pascal case name, ending with `<providerName>Provider.tsx` (example: `AuthProvider.tsx`)
-- NOTE: The provider file name should match the provider name inside the file
+Each context should:
+- Be created inside the `contexts` folder
+- Have pascal case name, ending with `<contextName>Context` (example: `AuthContext.tsx`)
+- NOTE: The context file name should match the context name inside the file
+
+``` ts
+// src/contexts/AuthContext.tsx
+
+const AuthContext = createContext(...);
+```
 
 ### Stores
 
