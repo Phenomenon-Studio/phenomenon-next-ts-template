@@ -1,7 +1,7 @@
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { SearchParamsOption } from 'ky';
 import type { BaseErrorData } from '@/lib/@http';
-import { queryOptions, useMutation } from '@tanstack/react-query';
+import { mutationOptions, queryOptions } from '@tanstack/react-query';
 import { queryKeyFactory } from '@/services/@queryKeyFactory';
 import { createUser, getUsers } from '@/services/usersExample/api';
 
@@ -18,8 +18,10 @@ export const getUsersQueryOptions = (searchParams: Record<string, unknown> | URL
     });
 };
 
-export const useCreateUser = (options?: UseMutationOptions<string, BaseErrorData, string, unknown>) => {
-    return useMutation({
+export const createUserMutationOptions = (
+    options?: Omit<UseMutationOptions<string, BaseErrorData, string, unknown>, 'mutationKey' | 'mutationFn'>
+) => {
+    return mutationOptions({
         ...options,
         mutationKey: usersExampleQueryKey('createUser'),
         mutationFn(data) {
