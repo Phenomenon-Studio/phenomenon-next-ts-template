@@ -14,7 +14,11 @@ const PUBLIC_PATHS = ['/login', '/sign-up'];
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
+    if (
+        PUBLIC_PATHS.some((publicPath) => {
+            return pathname.startsWith(publicPath);
+        })
+    ) {
         return NextResponse.next();
     }
 
