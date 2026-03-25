@@ -33,9 +33,9 @@ export const createServerHttpPrivate = (http: KyInstance) => {
                 },
             ],
             afterResponse: [
-                async (request, options, response, state) => {
+                async (request, options, response) => {
                     if (response.status === 401) {
-                        if (state.retryCount) {
+                        if (request.headers.get('X-Retry-Auth')) {
                             return await redirectToLogin();
                         }
 
@@ -57,6 +57,7 @@ export const createServerHttpPrivate = (http: KyInstance) => {
 
                             const newRequest = request.clone();
                             newRequest.headers.set('Authorization', `Bearer ${newAccessToken.data.accessToken}`);
+                            newRequest.headers.set('X-Retry-Auth', '1');
 
                             return ky(newRequest, options);
                         } catch {

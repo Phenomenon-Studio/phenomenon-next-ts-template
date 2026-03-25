@@ -1,7 +1,7 @@
 'use client';
 
 import { mutationOptions } from '@tanstack/react-query';
-import { setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
+import { removeJWTCookies, setJWTCookiesOnClientSide } from '@/lib/utils/auth/jwt/client';
 import { queryKeyFactory } from '@/services/@queryKeyFactory';
 import { login, logout, signUp } from './api';
 
@@ -39,7 +39,8 @@ export const logoutMutationOptions = () => {
             showErrorMessage: true,
         },
         mutationFn: logout,
-        onSuccess() {
+        async onSuccess() {
+            await removeJWTCookies();
             window.location.replace('/login');
         },
     });

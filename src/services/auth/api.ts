@@ -1,6 +1,5 @@
 import type { ResponseWithData } from '@/lib/types';
 import { http } from '@/lib/@http';
-import { removeJWTCookies } from '@/lib/utils/auth/jwt/client';
 
 export type LoginRequest = {
     email: string;
@@ -61,6 +60,5 @@ export const refreshToken = async (data: RefreshTokenRequest) => {
     return response.json();
 };
 
-export const logout = async () => {
-    return await removeJWTCookies();
-};
+// eslint-disable-next-line require-await
+export const logout = async () => {};

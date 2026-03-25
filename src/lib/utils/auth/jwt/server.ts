@@ -47,7 +47,7 @@ export const getDecodedUserFromJWT = async () => {
 };
 
 export const setJWTCookiesOnServerSide = async (accessToken: string, refreshToken?: string) => {
-    await setCookie(JWT_AUTH_TOKEN_COOKIE_NAME, accessToken, { cookies });
+    await setCookie(JWT_AUTH_TOKEN_COOKIE_NAME, accessToken, { cookies, ...JWT_COOKIE_OPTIONS });
 
     if (refreshToken) {
         await setCookie(JWT_REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
