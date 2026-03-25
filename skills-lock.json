@@ -1,35 +1,35 @@
 {
-  "version": 1,
-  "skills": {
-    "grill-me": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "computedHash": "f343ef02aa0ada0f8b13a77b6db7fb6a11f88d8067128215585500ef4fd3b5e0"
-    },
-    "improve-codebase-architecture": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "computedHash": "76d07c4c0bebc162cc76ca7494bfe7a90e279f35832f7ce6dfc4ce16518fd560"
-    },
-    "next-best-practices": {
-      "source": "vercel-labs/next-skills",
-      "sourceType": "github",
-      "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
-    },
-    "next-upgrade": {
-      "source": "vercel-labs/next-skills",
-      "sourceType": "github",
-      "computedHash": "be6bbf6ab1dc2cc6f2505cea52d497920c04f5b532c0846ee201f6029b803fb0"
-    },
-    "tanstack-query-best-practices": {
-      "source": "DeckardGer/tanstack-agent-skills",
-      "sourceType": "github",
-      "computedHash": "21d2e8b7468a81d772b6527ad8ca178cc2f3f08af777bb9061333013ee88a0c9"
-    },
-    "vercel-react-best-practices": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "computedHash": "c858d2d9023e73edb4e5504868cb0e36313e58fd56af12ef888b43c5634a3c17"
+    "version": 1,
+    "skills": {
+        "grill-me": {
+            "source": "mattpocock/skills",
+            "sourceType": "github",
+            "computedHash": "f343ef02aa0ada0f8b13a77b6db7fb6a11f88d8067128215585500ef4fd3b5e0"
+        },
+        "improve-codebase-architecture": {
+            "source": "mattpocock/skills",
+            "sourceType": "github",
+            "computedHash": "76d07c4c0bebc162cc76ca7494bfe7a90e279f35832f7ce6dfc4ce16518fd560"
+        },
+        "next-best-practices": {
+            "source": "vercel-labs/next-skills",
+            "sourceType": "github",
+            "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
+        },
+        "next-upgrade": {
+            "source": "vercel-labs/next-skills",
+            "sourceType": "github",
+            "computedHash": "be6bbf6ab1dc2cc6f2505cea52d497920c04f5b532c0846ee201f6029b803fb0"
+        },
+        "tanstack-query-best-practices": {
+            "source": "DeckardGer/tanstack-agent-skills",
+            "sourceType": "github",
+            "computedHash": "21d2e8b7468a81d772b6527ad8ca178cc2f3f08af777bb9061333013ee88a0c9"
+        },
+        "vercel-react-best-practices": {
+            "source": "vercel-labs/agent-skills",
+            "sourceType": "github",
+            "computedHash": "c858d2d9023e73edb4e5504868cb0e36313e58fd56af12ef888b43c5634a3c17"
+        }
     }
-  }
 }
