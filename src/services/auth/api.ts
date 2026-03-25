@@ -60,5 +60,4 @@ export const refreshToken = async (data: RefreshTokenRequest) => {
     return response.json();
 };
 
-// eslint-disable-next-line require-await
 export const logout = async () => {};
